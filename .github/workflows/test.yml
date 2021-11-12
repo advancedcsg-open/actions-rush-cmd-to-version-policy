@@ -4,13 +4,12 @@ on:
   pull_request:
     branches:
       - main
-      - releases/**
     paths-ignore:
       - '**.md'
   push:
-    # branches:
-    #   - main
-    #   - releases/**
+    branches-ignore:
+      - main
+      - dependabot/**
     paths-ignore:
       - '**.md'
 jobs:
@@ -34,7 +33,7 @@ jobs:
         id: pnpm-cache
         run: |
           echo "::set-output name=dir::$(pnpm config get cache)"
-      - name: Restore npm cache
+      - name: Restore pnpm cache
         uses: actions/cache@v2
         with:
           path: ${{ steps.pnpm-cache.outputs.dir}}
@@ -58,7 +57,7 @@ jobs:
         with:
           node-version: '12.x'
       - name: Setup rush
-        uses: advancedcsg-open/actions-rush@v1.4.0
+        uses: advancedcsg-open/actions-rush@v1.4.1
         with:
           working-directory: 'test/data'
       - name: Rush build / publish jFrog
