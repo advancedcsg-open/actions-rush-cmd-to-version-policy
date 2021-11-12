@@ -63,7 +63,7 @@ jobs:
         with:
           node-version: '12.x'
       - name: Setup rush
-        uses: advancedcsg-open/actions-rush
+        uses: advancedcsg-open/actions-rush@1.3.0
         working-directory: ./test/data
       - name: Rush build / publish jFrog
         uses: ./
