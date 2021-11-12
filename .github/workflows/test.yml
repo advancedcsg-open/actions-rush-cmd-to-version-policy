@@ -25,12 +25,12 @@ jobs:
         uses: actions/setup-node@v2.4.1
         with:
           node-version: '12.x'
-     - name: Setup pnpm
-       uses: pnpm/action-setup@v2.0.1
-       with:
-         version: 6.20.1
-         run_install: false 
-     - name: Determine npm cache directory
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.20.1
+          run_install: false
+      - name: Determine npm cache directory
         id: npm-cache
         run: |
           echo "::set-output name=dir::$(npm config get cache)"
