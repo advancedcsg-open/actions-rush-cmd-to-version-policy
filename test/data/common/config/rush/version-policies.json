@@ -1,0 +1,10 @@
+[
+  {
+    "definitionName": "individualVersion",
+    "policyName": "apps"
+  },
+  {
+    "definitionName": "individualVersion",
+    "policyName": "modules"
+  }
+]

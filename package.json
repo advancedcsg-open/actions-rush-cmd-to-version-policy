@@ -1,0 +1,36 @@
+{
+  "name": "advancedcsg-open/actions-rush-jfrog-modules",
+  "version": "1.0.0",
+  "description": "This will build a specified targets based on version policy and publish to jFrog",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest --coverage",
+    "build": "ncc build src/index.js -o dist --source-map --license licenses.txt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/advancedcsg-open/actions-rush-jfrog-modules.git"
+  },
+  "keywords": [],
+  "author": "Martin Reynolds",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/advancedcsg-open/actions-rush-jfrog-modules/issues"
+  },
+  "homepage": "https://github.com/advancedcsg-open/actions-rush-jfrog-modules#readme",
+  "dependencies": {
+    "@actions/core": "^1.6.0",
+    "@actions/exec": "^1.1.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.31.1",
+    "jest": "^27.3.1",
+    "standard": "^16.0.4"
+  },
+  "standard": {
+    "ignore": [
+      "/dist/",
+      "/__test__"
+    ]
+  }
+}

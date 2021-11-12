@@ -1,0 +1,11 @@
+---
+name: 'Rush build/publish jFrog'
+description: 'Based on a version policy, build the changed modules and publish to artifactory based on  module configuration'
+inputs:
+  version-policy:
+    description: 'Version policy name'
+    required: true
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+

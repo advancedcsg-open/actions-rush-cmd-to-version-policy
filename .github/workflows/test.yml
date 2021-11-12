@@ -1,0 +1,72 @@
+name: Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+      - releases/**
+    paths-ignore:
+      - '**.md'
+  push:
+    # branches:
+    #   - main
+    #   - releases/**
+    paths-ignore:
+      - '**.md'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v2.4.1
+        with:
+          node-version: '12.x'
+     - name: Setup pnpm
+       uses: pnpm/action-setup@v2.0.1
+       with:
+         version: 6.20.1
+         run_install: false 
+     - name: Determine npm cache directory
+        id: npm-cache
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+      - name: Restore npm cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.npm-cache.outputs.dir}}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Build & Test
+        run: pnpm install
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2.4.1
+        with:
+          node-version: '12.x'
+      - name: Setup rush
+        uses: advancedcsg-open/actions-rush
+        working-directory: ./test/data
+      - name: Rush build / publish jFrog
+        uses: ./
+        working-directory: ./test/data
+        with:
+          version-policy: modules
