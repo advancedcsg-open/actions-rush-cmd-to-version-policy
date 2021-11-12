@@ -42,7 +42,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Run unit tests
-        run: pnpm install
+        run: pnpm install && pnpm test
 
   action-test:
     strategy:
