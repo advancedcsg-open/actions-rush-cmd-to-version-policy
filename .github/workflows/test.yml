@@ -24,6 +24,10 @@ jobs:
         with:
           version: 6.20.1
           run_install: false
+      - name: Setup git
+        run: |
+          git config --local user.name "Github Actions"
+          git config --local user.email "build-svc@oneadvanced.com"
       - name: Determine pnpm cache directory
         id: pnpm-cache
         run: |
