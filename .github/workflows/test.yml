@@ -6,12 +6,7 @@ on:
       - main
     paths-ignore:
       - '**.md'
-  push:
-    branches-ignore:
-      - main
-      - dependabot/**
-    paths-ignore:
-      - '**.md'
+
 jobs:
   unit-test:
     runs-on: ubuntu-latest
