@@ -1,0 +1,7 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# create new distribution files
+pnpm test
+pnpm build
+git add dist
