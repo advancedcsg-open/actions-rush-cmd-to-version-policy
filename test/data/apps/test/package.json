@@ -4,6 +4,7 @@
   "description": "Sample app for testing",
   "main": "index.js",
   "scripts": {
+    "build": "",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Martin Reynolds",
