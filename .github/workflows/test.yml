@@ -14,7 +14,7 @@ on:
     paths-ignore:
       - '**.md'
 jobs:
-  build:
+  unit-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -30,26 +30,21 @@ jobs:
         with:
           version: 6.20.1
           run_install: false
-      - name: Determine npm cache directory
-        id: npm-cache
+      - name: Determine pnpm cache directory
+        id: pnpm-cache
         run: |
-          echo "::set-output name=dir::$(npm config get cache)"
+          echo "::set-output name=dir::$(pnpm config get cache)"
       - name: Restore npm cache
         uses: actions/cache@v2
         with:
-          path: ${{ steps.npm-cache.outputs.dir}}
+          path: ${{ steps.pnpm-cache.outputs.dir}}
           key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - name: Build & Test
+      - name: Run unit tests
         run: pnpm install
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  test:
+  action-test:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
