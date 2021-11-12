@@ -1,5 +1,6 @@
 /* eslint-env jest */
 const core = require('@actions/core')
+const fs = require('fs')
 
 const { Events, RefKey } = require('../src/constants')
 const utils = require('../src/utils')
@@ -66,7 +67,7 @@ test('rush runners complete successfully', async () => {
 test('load rush json successfully', () => {
   const loadRushJsonMock = jest.spyOn(utils, 'loadRushJson')
 
-  const rushJson = utils.loadRushJson('../test/data')
+  const rushJson = utils.loadRushJson('test/data')
 
   expect(loadRushJsonMock).toHaveBeenCalledTimes(1)
   expect(rushJson).toHaveProperty('projects')
@@ -76,7 +77,7 @@ test('load rush json fails', () => {
   const loadRushJsonMock = jest.spyOn(utils, 'loadRushJson')
 
   try {
-    utils.loadRushJson('../test/data/invalid')
+    utils.loadRushJson('test/data/invalid')
   } catch (error) {
     expect(loadRushJsonMock).toHaveBeenCalledTimes(1)
     expect(error).toBeInstanceOf(Error)

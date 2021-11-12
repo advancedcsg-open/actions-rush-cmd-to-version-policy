@@ -2894,6 +2894,7 @@ module.exports = run
 
 const core = __nccwpck_require__(924)
 const exec = __nccwpck_require__(531)
+const { readFileSync } = __nccwpck_require__(747)
 const path = __nccwpck_require__(622)
 
 const { RefKey } = __nccwpck_require__(697)
@@ -2924,7 +2925,7 @@ async function runRushBuild (versionPolicy, workingDirectory = '.') {
 function loadRushJson (workingDirectory) {
   const rushJsonPath = path.join(workingDirectory, 'rush.json')
   try {
-    return require(rushJsonPath)
+    return JSON.parse(readFileSync(rushJsonPath, 'utf8'))
   } catch (e) {
     throw new Error(`Failed to load rush.json. ${e.message}`)
   }

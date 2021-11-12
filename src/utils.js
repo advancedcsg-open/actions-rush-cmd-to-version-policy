@@ -1,5 +1,6 @@
 const core = require('@actions/core')
 const exec = require('@actions/exec')
+const { readFileSync } = require('fs')
 const path = require('path')
 
 const { RefKey } = require('./constants')
@@ -30,7 +31,7 @@ async function runRushBuild (versionPolicy, workingDirectory = '.') {
 function loadRushJson (workingDirectory) {
   const rushJsonPath = path.join(workingDirectory, 'rush.json')
   try {
-    return require(rushJsonPath)
+    return JSON.parse(readFileSync(rushJsonPath, 'utf8'))
   } catch (e) {
     throw new Error(`Failed to load rush.json. ${e.message}`)
   }
