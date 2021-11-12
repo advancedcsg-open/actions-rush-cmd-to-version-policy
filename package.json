@@ -1,5 +1,5 @@
 {
-  "name": "advancedcsg-open/actions-rush-jfrog-modules",
+  "name": "@advancedcsg-open/actions-rush-jfrog-modules",
   "version": "1.0.0",
   "description": "This will build a specified targets based on version policy and publish to jFrog",
   "main": "src/index.js",
