@@ -40,7 +40,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Setup test data
-        uses: advancedcsg-open/actions-rush@v1.4.1
+        uses: advancedcsg-open/actions-rush@v1.4.2
         with:
           working-directory: 'test/data'
       - name: Run unit tests
@@ -64,7 +64,7 @@ jobs:
         with:
           node-version: '12.x'
       - name: Setup rush
-        uses: advancedcsg-open/actions-rush@v1.4.1
+        uses: advancedcsg-open/actions-rush@v1.4.2
         with:
           working-directory: 'test/data'
       - name: Rush build / publish jFrog

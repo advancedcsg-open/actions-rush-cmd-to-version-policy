@@ -1,6 +1,5 @@
 /* eslint-env jest */
 const core = require('@actions/core')
-const fs = require('fs')
 
 const { Events, RefKey } = require('../src/constants')
 const utils = require('../src/utils')

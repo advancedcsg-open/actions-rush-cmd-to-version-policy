@@ -2861,8 +2861,8 @@ async function run () {
       return
     }
 
-    const versionPolicy = core.getInput('version-policy')
-    const workingDirectory = core.getInput('working-directory')
+    const versionPolicy = core.getInput('version-policy', { required: true })
+    const workingDirectory = core.getInput('working-directory', { required: false, default: '.' })
     if (!versionPolicy) {
       throw new Error('Parameter `version-policy` is required')
     }
