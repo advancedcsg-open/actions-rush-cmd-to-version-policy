@@ -5,6 +5,10 @@ inputs:
   version-policy:
     description: 'Version policy name'
     required: true
+  working-directory:
+    description: 'Rush root directory, if not repository root'
+    required: false
+    default: '.'
 runs:
   using: 'node12'
   main: 'dist/index.js'

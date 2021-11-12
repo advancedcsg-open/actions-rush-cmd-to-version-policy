@@ -65,9 +65,9 @@ jobs:
       - name: Setup rush
         uses: advancedcsg-open/actions-rush@v1.4.0
         with:
-          working-directory: test/data
+          working-directory: 'test/data'
       - name: Rush build / publish jFrog
         uses: ./
         with:
           version-policy: modules
-          working-directory: test/data
+          working-directory: 'test/data'
