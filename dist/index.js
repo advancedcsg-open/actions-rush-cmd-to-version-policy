@@ -2859,15 +2859,16 @@ async function run () {
     }
 
     const versionPolicy = core.getInput('version-policy')
+    const workingDirectory = core.getInput('working-directory')
     if (!versionPolicy) {
       throw new Error('Parameter `version-policy` is required')
     }
 
     // run rush build for the version policy
-    await utils.runRushBuild(versionPolicy)
+    await utils.runRushBuild(versionPolicy, workingDirectory)
 
     // load rush.json
-    const rushJson = utils.loadRushJson()
+    const rushJson = utils.loadRushJson(workingDirectory)
     const versionPolicyProjects = rushJson.projects.filter(project => project.versionPolicy === versionPolicy)
     versionPolicyProjects.forEach(project => {
       utils.logInfo(`Publishing project ${project.packageName}`)
@@ -2890,6 +2891,7 @@ module.exports = run
 
 const core = __nccwpck_require__(924)
 const exec = __nccwpck_require__(531)
+const path = __nccwpck_require__(622)
 
 const { RefKey } = __nccwpck_require__(697)
 
@@ -2907,14 +2909,19 @@ function isValidEvent () {
   return RefKey in process.env && Boolean(process.env[RefKey])
 }
 
-async function runRushBuild (versionPolicy) {
-  return exec.exec('node', ['common/scripts/install-run-rush.js', 'build', '--to-version-policy', versionPolicy])
+async function runRushBuild (versionPolicy, workingDirectory = '.') {
+  return exec.exec('node', [
+    'common/scripts/install-run-rush.js',
+    'build',
+    '--to-version-policy',
+    versionPolicy
+  ], { cwd: workingDirectory })
 }
 
-function loadRushJson () {
-  const rushJsonPath = './rush.json'
+function loadRushJson (workingDirectory) {
+  const rushJsonPath = path.join(workingDirectory, 'rush.json')
   try {
-    return __nccwpck_require__(422)
+    return require(rushJsonPath)
   } catch (e) {
     throw new Error(`Failed to load rush.json. ${e.message}`)
   }
@@ -2927,14 +2934,6 @@ module.exports = {
   loadRushJson,
   runRushBuild
 }
-
-
-/***/ }),
-
-/***/ 422:
-/***/ ((module) => {
-
-module.exports = eval("require")("./rush.json");
 
 
 /***/ }),

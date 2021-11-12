@@ -1,5 +1,6 @@
 const core = require('@actions/core')
 const exec = require('@actions/exec')
+const path = require('path')
 
 const { RefKey } = require('./constants')
 
@@ -17,12 +18,17 @@ function isValidEvent () {
   return RefKey in process.env && Boolean(process.env[RefKey])
 }
 
-async function runRushBuild (versionPolicy) {
-  return exec.exec('node', ['common/scripts/install-run-rush.js', 'build', '--to-version-policy', versionPolicy])
+async function runRushBuild (versionPolicy, workingDirectory = '.') {
+  return exec.exec('node', [
+    'common/scripts/install-run-rush.js',
+    'build',
+    '--to-version-policy',
+    versionPolicy
+  ], { cwd: workingDirectory })
 }
 
-function loadRushJson () {
-  const rushJsonPath = './rush.json'
+function loadRushJson (workingDirectory) {
+  const rushJsonPath = path.join(workingDirectory, 'rush.json')
   try {
     return require(rushJsonPath)
   } catch (e) {

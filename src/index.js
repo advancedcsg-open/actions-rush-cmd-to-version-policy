@@ -16,15 +16,16 @@ async function run () {
     }
 
     const versionPolicy = core.getInput('version-policy')
+    const workingDirectory = core.getInput('working-directory')
     if (!versionPolicy) {
       throw new Error('Parameter `version-policy` is required')
     }
 
     // run rush build for the version policy
-    await utils.runRushBuild(versionPolicy)
+    await utils.runRushBuild(versionPolicy, workingDirectory)
 
     // load rush.json
-    const rushJson = utils.loadRushJson()
+    const rushJson = utils.loadRushJson(workingDirectory)
     const versionPolicyProjects = rushJson.projects.filter(project => project.versionPolicy === versionPolicy)
     versionPolicyProjects.forEach(project => {
       utils.logInfo(`Publishing project ${project.packageName}`)

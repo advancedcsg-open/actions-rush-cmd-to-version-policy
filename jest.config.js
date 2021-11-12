@@ -4,7 +4,7 @@ module.exports = {
   clearMocks: true,
   moduleFileExtensions: ['js', 'ts'],
   testEnvironment: 'node',
-  testMatch: ['**/__tests__/**/*.test.js'],
+  testMatch: ['**/test/**/*.spec.js'],
   testRunner: 'jest-circus/runner',
   verbose: true
 }
