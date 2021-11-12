@@ -4,6 +4,9 @@ const Events = {
   PullRequest: 'pull_request'
 }
 
+const RefKey = 'GITHUB_REF'
+
 module.exports = {
-  Events
+  Events,
+  RefKey
 }
