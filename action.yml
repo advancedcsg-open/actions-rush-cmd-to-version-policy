@@ -5,6 +5,13 @@ inputs:
   version-policy:
     description: 'Version policy name'
     required: true
+  cmd:
+    description: 'Command to execute, for example `npm`.'
+    required: true
+  cmd-args:
+    description: 'Command arguments, for example `install`.'
+    required: false
+    default: ''
   working-directory:
     description: 'Rush root directory, if not repository root'
     required: false
