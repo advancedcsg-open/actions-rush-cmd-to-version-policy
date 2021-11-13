@@ -2853,6 +2853,8 @@ async function run () {
   try {
     const workingDirectory = core.getInput('working-directory', { required: false, default: '.' })
     const versionPolicy = core.getInput('version-policy', { required: true })
+    const cmd = core.getInput('cmd', { required: true })
+    const cmdArgs = core.getInput('cmd-args', { required: false, default: '' })
 
     try {
       if (utils.isGhes()) {
@@ -2865,10 +2867,6 @@ async function run () {
 
       if (!existsSync(workingDirectory)) {
         throw new Error(`Working directory '${workingDirectory}' does not exist`)
-      }
-
-      if (!versionPolicy) {
-        throw new Error('Parameter `version-policy` is required')
       }
     } catch (error) {
       utils.logWarning(`Invalid configuration: ${error.message}`)
@@ -2887,7 +2885,7 @@ async function run () {
     try {
       const versionPolicyProjects = await utils.getVersionPolicyProjects(versionPolicy, workingDirectory)
       if (versionPolicyProjects && versionPolicyProjects.length > 0) {
-        await utils.processProjects(versionPolicyProjects, workingDirectory)
+        await utils.processProjects(versionPolicyProjects, workingDirectory, cmd, cmdArgs)
       }
     } catch (error) {
       utils.logWarning(`Error processing projects: ${error.message}`)
@@ -2974,10 +2972,6 @@ function loadRushJson (workingDirectory) {
   }
 
   const rawJson = readFileSync(rushJsonPath, 'utf8')
-  if (!rawJson) {
-    throw new Error(`Failed to load ${rushJsonPath}`)
-  }
-
   const rushJson = JSON.parse(rawJson)
   return rushJson
 }
@@ -2992,10 +2986,10 @@ function getVersionPolicyProjects (versionPolicy, workingDirectory) {
   }
 }
 
-async function processProjects (projects, workingDirectory) {
+async function processProjects (projects, workingDirectory, cmd, cmdArgs) {
   const promises = []
   for (const project of projects) {
-    promises.push(exec.exec('npm', ['run', 'publish-rt'], {
+    promises.push(exec.exec(cmd, cmdArgs.split(','), {
       cwd: path.join(workingDirectory, project.projectFolder)
     }))
   }
