@@ -6,5 +6,6 @@ module.exports = {
   testEnvironment: 'node',
   testMatch: ['**/test/**/*.spec.js'],
   testRunner: 'jest-circus/runner',
-  verbose: true
+  verbose: true,
+  testTimeout: 30000
 }
