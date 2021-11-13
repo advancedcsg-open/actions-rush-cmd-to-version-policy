@@ -40,7 +40,9 @@ async function run () {
     // process projects
     try {
       const versionPolicyProjects = await utils.getVersionPolicyProjects(versionPolicy, workingDirectory)
-      utils.logInfo(`Found following projects: ${versionPolicyProjects}`)
+      if (versionPolicyProjects && versionPolicyProjects.length > 0) {
+        await utils.processProjects(versionPolicyProjects, workingDirectory)
+      }
     } catch (error) {
       utils.logWarning(`Error processing projects: ${error.message}`)
       throw error

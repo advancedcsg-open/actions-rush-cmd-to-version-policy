@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "ncc build index.js -o dist --source-map",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "publish-rt": "echo \"publishing with jFrog cli\""
   },
   "author": "Martin Reynolds",
   "license": "ISC",

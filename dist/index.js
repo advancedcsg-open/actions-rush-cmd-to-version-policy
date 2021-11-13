@@ -2886,7 +2886,9 @@ async function run () {
     // process projects
     try {
       const versionPolicyProjects = await utils.getVersionPolicyProjects(versionPolicy, workingDirectory)
-      utils.logInfo(`Found following projects: ${versionPolicyProjects}`)
+      if (versionPolicyProjects && versionPolicyProjects.length > 0) {
+        await utils.processProjects(versionPolicyProjects, workingDirectory)
+      }
     } catch (error) {
       utils.logWarning(`Error processing projects: ${error.message}`)
       throw error
@@ -2990,6 +2992,16 @@ function getVersionPolicyProjects (versionPolicy, workingDirectory) {
   }
 }
 
+async function processProjects (projects, workingDirectory) {
+  const promises = []
+  for (const project of projects) {
+    promises.push(exec.exec('npm', ['run', 'publish-rt'], {
+      cwd: path.join(workingDirectory, project.projectFolder)
+    }))
+  }
+  return Promise.all(promises)
+}
+
 module.exports = {
   isGhes,
   logWarning,
@@ -2997,7 +3009,8 @@ module.exports = {
   isValidEvent,
   loadRushJson,
   getVersionPolicyProjects,
-  runRushBuild
+  runRushBuild,
+  processProjects
 }
 
 

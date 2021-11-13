@@ -81,6 +81,16 @@ function getVersionPolicyProjects (versionPolicy, workingDirectory) {
   }
 }
 
+async function processProjects (projects, workingDirectory) {
+  const promises = []
+  for (const project of projects) {
+    promises.push(exec.exec('npm', ['run', 'publish-rt'], {
+      cwd: path.join(workingDirectory, project.projectFolder)
+    }))
+  }
+  return Promise.all(promises)
+}
+
 module.exports = {
   isGhes,
   logWarning,
@@ -88,5 +98,6 @@ module.exports = {
   isValidEvent,
   loadRushJson,
   getVersionPolicyProjects,
-  runRushBuild
+  runRushBuild,
+  processProjects
 }
