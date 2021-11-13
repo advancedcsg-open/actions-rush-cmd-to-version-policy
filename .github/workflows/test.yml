@@ -71,4 +71,6 @@ jobs:
         uses: ./
         with:
           version-policy: modules
+          cmd: pnpm
+          cmd-args: publish-rt
           working-directory: 'test/data'

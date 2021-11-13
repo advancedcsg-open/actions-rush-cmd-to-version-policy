@@ -36,6 +36,16 @@ test('logWarning logs a message with a warning prefix', () => {
   expect(infoMock).toHaveBeenCalledWith(`[warning]${message}`)
 })
 
+test('logInfo logs a message with a info prefix', () => {
+  const message = 'Information message logged.'
+
+  const infoMock = jest.spyOn(core, 'info')
+
+  utils.logInfo(message)
+
+  expect(infoMock).toHaveBeenCalledWith(`[info]${message}`)
+})
+
 test('isValidEvent returns false for event that does not have a branch or tag', () => {
   const event = 'foo'
   process.env[Events.Key] = event
@@ -61,6 +71,17 @@ test('rush runners complete successfully', async () => {
   await utils.runRushBuild('modules', 'test/data')
 
   expect(runRushBuildMock).toHaveBeenCalledTimes(1)
+})
+
+test('rush runners fail with invalid path', async () => {
+  const runRushBuildMock = jest.spyOn(utils, 'runRushBuild')
+
+  try {
+    await utils.runRushBuild('modules', 'test/data/invalid')
+  } catch (error) {
+    expect(runRushBuildMock).toHaveBeenCalledTimes(1)
+    expect(error.message).toBe('Path not found: test/data/invalid')
+  }
 })
 
 test('load rush json successfully', () => {
@@ -90,4 +111,29 @@ test('load version policy projects successfully', () => {
 
   expect(getVersionPolicyProjectsMock).toHaveBeenCalledTimes(1)
   expect(projects[0]).toHaveProperty('versionPolicyName')
+})
+
+test('load version policy projects fails', () => {
+  const getVersionPolicyProjectsMock = jest.spyOn(utils, 'getVersionPolicyProjects')
+
+  try {
+    utils.getVersionPolicyProjects('modules', 'test/data/invalid')
+  } catch (error) {
+    expect(getVersionPolicyProjectsMock).toHaveBeenCalledTimes(1)
+    expect(error).toBeInstanceOf(Error)
+  }
+})
+
+test('process projects successfully', async () => {
+  const projects = [{
+    packageName: '@rush-jfrog-modules/module-test',
+    projectFolder: 'modules/test',
+    reviewCategory: 'production',
+    versionPolicyName: 'modules'
+  }]
+  const processProjectsMock = jest.spyOn(utils, 'processProjects')
+
+  await utils.processProjects(projects, 'test/data', 'pnpm', 'publish-rt')
+
+  expect(processProjectsMock).toHaveBeenCalledTimes(1)
 })

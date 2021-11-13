@@ -9,7 +9,7 @@ inputs:
     description: 'Command to execute, for example `npm`.'
     required: true
   cmd-args:
-    description: 'Command arguments, for example `install`.'
+    description: 'Command arguments, for example `run,publish-rt`. Note, arguments MUST be comma separated.'
     required: false
     default: ''
   working-directory:

@@ -7,6 +7,8 @@ async function run () {
   try {
     const workingDirectory = core.getInput('working-directory', { required: false, default: '.' })
     const versionPolicy = core.getInput('version-policy', { required: true })
+    const cmd = core.getInput('cmd', { required: true })
+    const cmdArgs = core.getInput('cmd-args', { required: false, default: '' })
 
     try {
       if (utils.isGhes()) {
@@ -19,10 +21,6 @@ async function run () {
 
       if (!existsSync(workingDirectory)) {
         throw new Error(`Working directory '${workingDirectory}' does not exist`)
-      }
-
-      if (!versionPolicy) {
-        throw new Error('Parameter `version-policy` is required')
       }
     } catch (error) {
       utils.logWarning(`Invalid configuration: ${error.message}`)
@@ -41,7 +39,7 @@ async function run () {
     try {
       const versionPolicyProjects = await utils.getVersionPolicyProjects(versionPolicy, workingDirectory)
       if (versionPolicyProjects && versionPolicyProjects.length > 0) {
-        await utils.processProjects(versionPolicyProjects, workingDirectory)
+        await utils.processProjects(versionPolicyProjects, workingDirectory, cmd, cmdArgs)
       }
     } catch (error) {
       utils.logWarning(`Error processing projects: ${error.message}`)

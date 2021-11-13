@@ -63,10 +63,6 @@ function loadRushJson (workingDirectory) {
   }
 
   const rawJson = readFileSync(rushJsonPath, 'utf8')
-  if (!rawJson) {
-    throw new Error(`Failed to load ${rushJsonPath}`)
-  }
-
   const rushJson = JSON.parse(rawJson)
   return rushJson
 }
@@ -81,10 +77,10 @@ function getVersionPolicyProjects (versionPolicy, workingDirectory) {
   }
 }
 
-async function processProjects (projects, workingDirectory) {
+async function processProjects (projects, workingDirectory, cmd, cmdArgs) {
   const promises = []
   for (const project of projects) {
-    promises.push(exec.exec('npm', ['run', 'publish-rt'], {
+    promises.push(exec.exec(cmd, cmdArgs.split(','), {
       cwd: path.join(workingDirectory, project.projectFolder)
     }))
   }
