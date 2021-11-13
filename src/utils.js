@@ -1,6 +1,6 @@
 const core = require('@actions/core')
 const exec = require('@actions/exec')
-const { readFileSync } = require('fs')
+const { readFileSync, existsSync } = require('fs')
 const path = require('path')
 
 const { RefKey } = require('./constants')
@@ -15,32 +15,78 @@ function logWarning (message) {
   core.info(`${warningPrefix}${message}`)
 }
 
+function logInfo (message) {
+  const infoPrefix = '[info]'
+  core.info(`${infoPrefix}${message}`)
+}
+
 function isValidEvent () {
   return RefKey in process.env && Boolean(process.env[RefKey])
 }
 
-async function runRushBuild (versionPolicy, workingDirectory = '.') {
-  return exec.exec('node', [
+async function runRushBuild (versionPolicy, workingDirectory) {
+  if (!existsSync(workingDirectory)) {
+    throw new Error(`Path not found: ${workingDirectory}`)
+  }
+
+  let myOutput = ''
+  let myError = ''
+
+  const options = {}
+  options.listeners = {
+    stdout: (data) => {
+      myOutput += data.toString()
+    },
+    stderr: (data) => {
+      myError += data.toString()
+    }
+  }
+  options.cwd = workingDirectory
+
+  await exec.exec('node', [
     'common/scripts/install-run-rush.js',
     'build',
     '--to-version-policy',
     versionPolicy
-  ], { cwd: workingDirectory })
+  ], options)
+
+  if (myError) {
+    throw new Error(`Build failed: ${myError}`)
+  }
+  return myOutput
 }
 
 function loadRushJson (workingDirectory) {
   const rushJsonPath = path.join(workingDirectory, 'rush.json')
+  if (!existsSync(rushJsonPath)) {
+    throw new Error(`Could not find rush.json in ${workingDirectory}`)
+  }
+
+  const rawJson = readFileSync(rushJsonPath, 'utf8')
+  if (!rawJson) {
+    throw new Error(`Failed to load ${rushJsonPath}`)
+  }
+
+  const rushJson = JSON.parse(rawJson)
+  return rushJson
+}
+
+function getVersionPolicyProjects (versionPolicy, workingDirectory) {
   try {
-    return JSON.parse(readFileSync(rushJsonPath, 'utf8'))
-  } catch (e) {
-    throw new Error(`Failed to load rush.json. ${e.message}`)
+    const rushJson = loadRushJson(workingDirectory)
+    const projects = rushJson.projects.filter(project => project.versionPolicyName === versionPolicy)
+    return projects
+  } catch (error) {
+    throw new Error(`Failed to get version policy projects: ${error.message}`)
   }
 }
 
 module.exports = {
   isGhes,
   logWarning,
+  logInfo,
   isValidEvent,
   loadRushJson,
+  getVersionPolicyProjects,
   runRushBuild
 }

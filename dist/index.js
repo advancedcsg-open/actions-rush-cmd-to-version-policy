@@ -2847,35 +2847,50 @@ module.exports = {
 const core = __nccwpck_require__(924)
 const utils = __nccwpck_require__(525)
 const { Events } = __nccwpck_require__(697)
+const { existsSync } = __nccwpck_require__(747)
 
 async function run () {
   try {
-    if (utils.isGhes()) {
-      utils.logWarning('Action is not supported on GHES')
-      utils.setCacheHitOutput(false)
-      return
-    }
-
-    if (!utils.isValidEvent()) {
-      utils.logWarning(`Event Validation Error: The event type ${process.env[Events.Key]} is not supported because it's not tied to a branch or tag ref.`)
-      return
-    }
-
-    const versionPolicy = core.getInput('version-policy', { required: true })
     const workingDirectory = core.getInput('working-directory', { required: false, default: '.' })
-    if (!versionPolicy) {
-      throw new Error('Parameter `version-policy` is required')
+    const versionPolicy = core.getInput('version-policy', { required: true })
+
+    try {
+      if (utils.isGhes()) {
+        throw new Error('Action is not supported on GHES')
+      }
+
+      if (!utils.isValidEvent()) {
+        throw new Error(`Event Validation Error: The event type ${process.env[Events.Key]} is not supported because it's not tied to a branch or tag ref.`)
+      }
+
+      if (!existsSync(workingDirectory)) {
+        throw new Error(`Working directory '${workingDirectory}' does not exist`)
+      }
+
+      if (!versionPolicy) {
+        throw new Error('Parameter `version-policy` is required')
+      }
+    } catch (error) {
+      utils.logWarning(`Invalid configuration: ${error.message}`)
+      throw error
     }
 
     // run rush build for the version policy
-    await utils.runRushBuild(versionPolicy, workingDirectory)
+    try {
+      await utils.runRushBuild(versionPolicy, workingDirectory)
+    } catch (error) {
+      utils.logWarning(`Error running rush build: ${error.message}`)
+      throw error
+    }
 
-    // load rush.json
-    const rushJson = utils.loadRushJson(workingDirectory)
-    const versionPolicyProjects = rushJson.projects.filter(project => project.versionPolicy === versionPolicy)
-    versionPolicyProjects.forEach(project => {
-      utils.logInfo(`Publishing project ${project.packageName}`)
-    })
+    // process projects
+    try {
+      const versionPolicyProjects = await utils.getVersionPolicyProjects(versionPolicy, workingDirectory)
+      utils.logInfo(`Found following projects: ${versionPolicyProjects}`)
+    } catch (error) {
+      utils.logWarning(`Error processing projects: ${error.message}`)
+      throw error
+    }
   } catch (error) {
     core.error(`Action failed: ${error.message}`)
     core.setFailed(error.message)
@@ -2894,7 +2909,7 @@ module.exports = run
 
 const core = __nccwpck_require__(924)
 const exec = __nccwpck_require__(531)
-const { readFileSync } = __nccwpck_require__(747)
+const { readFileSync, existsSync } = __nccwpck_require__(747)
 const path = __nccwpck_require__(622)
 
 const { RefKey } = __nccwpck_require__(697)
@@ -2909,33 +2924,79 @@ function logWarning (message) {
   core.info(`${warningPrefix}${message}`)
 }
 
+function logInfo (message) {
+  const infoPrefix = '[info]'
+  core.info(`${infoPrefix}${message}`)
+}
+
 function isValidEvent () {
   return RefKey in process.env && Boolean(process.env[RefKey])
 }
 
-async function runRushBuild (versionPolicy, workingDirectory = '.') {
-  return exec.exec('node', [
+async function runRushBuild (versionPolicy, workingDirectory) {
+  if (!existsSync(workingDirectory)) {
+    throw new Error(`Path not found: ${workingDirectory}`)
+  }
+
+  let myOutput = ''
+  let myError = ''
+
+  const options = {}
+  options.listeners = {
+    stdout: (data) => {
+      myOutput += data.toString()
+    },
+    stderr: (data) => {
+      myError += data.toString()
+    }
+  }
+  options.cwd = workingDirectory
+
+  await exec.exec('node', [
     'common/scripts/install-run-rush.js',
     'build',
     '--to-version-policy',
     versionPolicy
-  ], { cwd: workingDirectory })
+  ], options)
+
+  if (myError) {
+    throw new Error(`Build failed: ${myError}`)
+  }
+  return myOutput
 }
 
 function loadRushJson (workingDirectory) {
   const rushJsonPath = path.join(workingDirectory, 'rush.json')
+  if (!existsSync(rushJsonPath)) {
+    throw new Error(`Could not find rush.json in ${workingDirectory}`)
+  }
+
+  const rawJson = readFileSync(rushJsonPath, 'utf8')
+  if (!rawJson) {
+    throw new Error(`Failed to load ${rushJsonPath}`)
+  }
+
+  const rushJson = JSON.parse(rawJson)
+  return rushJson
+}
+
+function getVersionPolicyProjects (versionPolicy, workingDirectory) {
   try {
-    return JSON.parse(readFileSync(rushJsonPath, 'utf8'))
-  } catch (e) {
-    throw new Error(`Failed to load rush.json. ${e.message}`)
+    const rushJson = loadRushJson(workingDirectory)
+    const projects = rushJson.projects.filter(project => project.versionPolicyName === versionPolicy)
+    return projects
+  } catch (error) {
+    throw new Error(`Failed to get version policy projects: ${error.message}`)
   }
 }
 
 module.exports = {
   isGhes,
   logWarning,
+  logInfo,
   isValidEvent,
   loadRushJson,
+  getVersionPolicyProjects,
   runRushBuild
 }
 

@@ -82,3 +82,12 @@ test('load rush json fails', () => {
     expect(error).toBeInstanceOf(Error)
   }
 })
+
+test('load version policy projects successfully', () => {
+  const getVersionPolicyProjectsMock = jest.spyOn(utils, 'getVersionPolicyProjects')
+
+  const projects = utils.getVersionPolicyProjects('modules', 'test/data')
+
+  expect(getVersionPolicyProjectsMock).toHaveBeenCalledTimes(1)
+  expect(projects[0]).toHaveProperty('versionPolicyName')
+})
