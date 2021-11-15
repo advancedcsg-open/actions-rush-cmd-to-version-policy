@@ -71,4 +71,4 @@ jobs:
 ```
 ### License
 
-actions-rush is licensed under the MIT License. See the LICENSE file for more info.
+actions-rush-cmd-to-version-policy is licensed under the MIT License. See the LICENSE file for more info.

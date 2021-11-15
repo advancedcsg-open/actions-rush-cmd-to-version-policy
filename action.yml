@@ -1,5 +1,5 @@
 ---
-name: 'Rush build/publish jFrog'
+name: 'Action Rush Version Policy Command'
 description: 'Based on a version policy, build the changed modules and publish to artifactory based on  module configuration'
 inputs:
   version-policy:
@@ -19,4 +19,3 @@ inputs:
 runs:
   using: 'node12'
   main: 'dist/index.js'
-
