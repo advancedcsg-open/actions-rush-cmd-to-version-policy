@@ -22,7 +22,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2.0.1
         with:
-          version: 6.21.1
+          version: 6.22.1
           run_install: false
       - name: Setup git
         run: |
@@ -66,7 +66,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2.0.1
         with:
-          version: 6.21.1
+          version: 6.22.1
           run_install: false
       - name: Determine pnpm cache directory
         id: pnpm-cache
