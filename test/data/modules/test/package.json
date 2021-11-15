@@ -1,0 +1,16 @@
+{
+  "name": "@rush-jfrog-modules/module-test",
+  "version": "1.0.0",
+  "description": "Simple module for testing",
+  "main": "index.js",
+  "scripts": {
+    "build": "ncc build index.js -o dist --source-map",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "publish-rt": "echo \"publishing with jFrog cli\""
+  },
+  "author": "Martin Reynolds",
+  "license": "ISC",
+  "devDependencies": {
+    "@vercel/ncc": "~0.31.1"
+  }
+}

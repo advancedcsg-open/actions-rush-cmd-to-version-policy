@@ -1,0 +1,22 @@
+---
+name: 'Rush build/publish jFrog'
+description: 'Based on a version policy, build the changed modules and publish to artifactory based on  module configuration'
+inputs:
+  version-policy:
+    description: 'Version policy name'
+    required: true
+  cmd:
+    description: 'Command to execute, for example `npm`.'
+    required: true
+  cmd-args:
+    description: 'Command arguments, for example `run,publish-rt`. Note, arguments MUST be comma separated.'
+    required: false
+    default: ''
+  working-directory:
+    description: 'Rush root directory, if not repository root'
+    required: false
+    default: '.'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+

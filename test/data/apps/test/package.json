@@ -1,0 +1,15 @@
+{
+  "name": "@rush-jfrog-modules/app-test",
+  "version": "1.0.0",
+  "description": "Sample app for testing",
+  "main": "index.js",
+  "scripts": {
+    "build": "",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Martin Reynolds",
+  "license": "ISC",
+  "dependencies": {
+    "@rush-jfrog-modules/module-test": "workspace:*"
+  }
+}

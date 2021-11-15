@@ -1,0 +1,25 @@
+lockfileVersion: 5.3
+
+importers:
+
+  .:
+    specifiers: {}
+
+  ../../apps/test:
+    specifiers:
+      '@rush-jfrog-modules/module-test': workspace:*
+    dependencies:
+      '@rush-jfrog-modules/module-test': link:../../modules/test
+
+  ../../modules/test:
+    specifiers:
+      '@vercel/ncc': ~0.31.1
+    devDependencies:
+      '@vercel/ncc': 0.31.1
+
+packages:
+
+  /@vercel/ncc/0.31.1:
+    resolution: {integrity: sha512-g0FAxwdViI6UzsiVz5HssIHqjcPa1EHL6h+2dcJD893SoCJaGdqqgUF09xnMW6goWnnhbLvgiKlgJWrJa+7qYA==}
+    hasBin: true
+    dev: true

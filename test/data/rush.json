@@ -1,0 +1,61 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush.schema.json",
+  "rushVersion": "5.56.0",
+  "pnpmVersion": "6.21.1",
+  "pnpmOptions": {
+    "pnpmStore": "local",
+    "strictPeerDependencies": false,
+    "resolutionStrategy": "fast",
+    "preventManualShrinkwrapChanges": true,
+    "useWorkspaces": true
+  },
+  "nodeSupportedVersionRange": ">=12.13.0 <13.0.0 || >=14.15.0 <15.0.0",
+  "suppressNodeLtsWarning": false,
+  "ensureConsistentVersions": true,
+  "projectFolderMinDepth": 2,
+  "projectFolderMaxDepth": 2,
+  "approvedPackagesPolicy": {
+    "reviewCategories": [
+      "production",
+      "tools",
+      "prototypes"
+    ],
+    "ignoredNpmScopes": ["@types"]
+  },
+  "gitPolicy": {
+    "allowedEmailRegExps": [
+      "[^@]+@users\\.noreply\\.github\\.com",
+      ".*@oneadvanced\\.com"
+    ],
+    "sampleEmail": "martin.reynolds@oneadvanced.com",
+    "versionBumpCommitMessage": "chore: bump versions [skip ci]",
+    "changeLogUpdateCommitMessage": "chore: Update changelogs [skip ci]"
+  },
+  "repository": {
+    "url": "https://github.com/advancedcsg-open/actions-rush-jfrog-modules/test/data",
+    "defaultBranch": "main",
+    "defaultRemote": "origin"
+  },
+  "eventHooks": {
+    "preRushInstall": [],
+    "postRushInstall": [],
+    "preRushBuild": [],
+    "postRushBuild": []
+  },
+  "variants": [],
+  "hotfixChangeEnabled": true,
+  "projects": [
+    {
+      "packageName": "@rush-jfrog-modules/app-test",
+      "projectFolder": "apps/test",
+      "reviewCategory": "production",
+      "versionPolicyName": "apps"
+    },
+    {
+      "packageName": "@rush-jfrog-modules/module-test",
+      "projectFolder": "modules/test",
+      "reviewCategory": "production",
+      "versionPolicyName": "modules"
+    }
+  ]
+}
