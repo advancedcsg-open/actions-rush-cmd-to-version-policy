@@ -1,6 +1,9 @@
 ---
 name: 'Action Rush Version Policy Command'
 description: 'Based on a version policy, build the changed modules and publish to artifactory based on  module configuration'
+branding:
+  icon: 'check'
+  color: 'gray-dark'
 inputs:
   version-policy:
     description: 'Version policy name'
