@@ -2960,7 +2960,7 @@ async function runRushBuild (versionPolicy, workingDirectory) {
   ], options)
 
   if (myError) {
-    throw new Error(`Build failed: ${myError}`)
+    logWarning(`Rush build messages:\n ${myError}`)
   }
   return myOutput
 }

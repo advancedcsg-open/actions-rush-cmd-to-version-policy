@@ -1,6 +1,6 @@
 {
   "name": "@advancedcsg-open/actions-rush-cmd-to-version-policy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This will build a specified targets based on version policy and publish to jFrog",
   "main": "src/index.js",
   "scripts": {
