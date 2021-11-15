@@ -2,7 +2,7 @@
 <p align="center">
   <a href="https://standardjs.com"><img alt="JavaScript Style Guide" src="https://img.shields.io/badge/code_style-standard-brightgreen.svg"></a>
   <a href="http://commitizen.github.io/cz-cli/"><img alt="Commitizen friendly" src="https://img.shields.io/badge/commitizen-friendly-brightgreen.svg"></a>
-  <a href="https://github.com/advancedcsg-open/actions-rush-cmd-to-version-policy/actions"><img alt="javscript-action status" src="https://github.com/actions/javascript-action/workflows/units-test/badge.svg"></a>
+  <a href="https://github.com/advancedcsg-open/actions-rush-cmd-to-version-policy/actions"><img alt="action status" src="https://github.com/actions/javascript-action/workflows/units-test/badge.svg"></a>
 </p>
 
 This actions will execute a single cli command for each rush project that has a matching version policy as specified in the action parameters.
